@@ -53,4 +53,12 @@ export class CompanyService {
       .take(limit)
       .execute()
   }
+
+  async count(search: string) {
+    return this.companyRepository
+      .createQueryBuilder()
+      .where("companyName LIKE :search", { search: `%${search}%` })
+      .select("COUNT(id)", "count")
+      .getRawOne()
+  }
 }

@@ -14,15 +14,22 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Get()
-  search(@Query() query: SearchCompaniesDto): Promise<Company[]> {
+  async search(@Query() query: SearchCompaniesDto) {
     const search = query.search;
     const limit = query.limit || 20;
     const skip= query.skip || 0;
-    return this.companyService.search({
+    const companies = await this.companyService.search({
       search,
       skip,
       limit
     });
+
+    const { count } = await this.companyService.count(search);
+
+    return {
+      companies,
+      total: count
+    }
   }
 
   @Get(':id')
