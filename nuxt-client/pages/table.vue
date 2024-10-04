@@ -1,6 +1,6 @@
 <template>
   <h2 class="text-center mt-9 text-lg">Table</h2>
-  <UTable :rows="people" :columns="columns">
+  <UTable :rows="people" :columns="columns" class="scroll-auto">
     <template #name-data="{ row }">
       <span>{{ row.name }}</span>
     </template>
@@ -11,9 +11,25 @@
 </template>
 
 <script setup lang="ts">
+let skip = 0;
+let limit = 20;
+const people = useState('people', () => []);
+const fetchSearch = async (search: string) => {
+  const result =await fetch(
+    encodeURI(`http://localhost:3000/companies/?search=${search}&skip=${skip}&limit=${limit}`),
+    { headers: { 'Content-Type': 'application/json'}})
+    .then(res=> res.json());
+  people.value = result.map((item:any) => ({
+    ...item,
+    location: `${item.city} ${item.state} ${item.country}`,
+    profitable: item.profitable ? 'yes' : 'no'
+  }));
+}
+
 const route = useRoute()
-const search = route.query.search;
-console.log('search', search)
+const search:string = route.query.search as string;
+
+fetchSearch(search)
 
 interface ICompanyShort {
   id: number,
@@ -31,36 +47,6 @@ interface ICompanyShort {
   website: string,
 }
 
-const people: ICompanyShort[] = [{
-  id: 1,
-  ceo: 'C. Douglas McMillon',
-  companyName: 'Walmart',
-  companyType: 'Public',
-  industry: 'General Merchandisers',
-  location: 'U.S.',
-  marketCapNumber: 484852.8,
-  profitable: true,
-  profits: 15511.0,
-  revenue: 648125.0,
-  sector: 'Retailing',
-  ticker: 'WMT',
-  website: 'https://www.stock.walmart.com',
-},{
-  id: 2,
-  ceo: 'Andrew R. Jassy',
-  companyName: 'Amazon',
-  companyType: 'Public',
-  industry: 'Internet Services and Retailing',
-  location: 'U.S.',
-  marketCapNumber: 1873675.8,
-  profitable: true,
-  profits: 30425.0,
-  revenue: 574785.0,
-  sector: 'Retailing',
-  ticker: 'AMZN',
-  website: 'https://www.amazon.com',
-}]
-
 const columns = [{
   key: 'id',
   label: 'ID'
@@ -76,12 +62,16 @@ const columns = [{
 }, {
   key: 'industry',
   label: 'Industry'
-}, {
+},{
+  key: 'numberEmployees',
+  label: 'Number of employees'
+},
+ {
   key: 'location',
   label: 'Location'
 }, {
-  key: 'marketCapNumber',
-  label: 'Market CapNumber of Employees'
+  key: 'marketCap',
+  label: 'Market Cap'
 }, {
   key: 'profitable',
   label: 'Profitable'

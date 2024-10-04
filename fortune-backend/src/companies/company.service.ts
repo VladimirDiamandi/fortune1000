@@ -46,6 +46,7 @@ export class CompanyService {
         "revenue",
         "sector",
         "ticker",
+        "industry",
         "website"
       ])
       .skip(skip)
