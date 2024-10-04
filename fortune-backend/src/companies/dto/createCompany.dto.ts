@@ -1,0 +1,34 @@
+export class CreateCompanyDto {
+  rank: number;
+  companyName: string;
+  ticker: string;
+  sector: string;
+  industry: string;
+  profitable: boolean;
+  founderIsCeo: boolean;
+  femaleCeo: boolean;
+  growsInJobs: boolean;
+  changeInRank: number;
+  gainedInRank: boolean;
+  droppedInRank: boolean;
+  newcomer: boolean;
+  global500: boolean;
+  worldMostAdmired: boolean;
+  bestToWork: boolean;
+  numberEmployees: number;
+  marketCapNumber: number;
+  revenue: number;
+  revenuePercentChange: number;
+  profits: number;
+  profitsPercentChange?: number;
+  assets: number;
+  ceo: string;
+  country: string;
+  city: string;
+  state: string;
+  website: string;
+  companyType: string;
+  footnote: string;
+  marketCap: number;
+  updated: Date;
+}
